@@ -107,19 +107,75 @@ ul li::before{content:"□  ";}
     max-width:1100px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;                             /* 사진 사이 간격 */
+    gap: 30px;
     margin-top: 20px;
 }
 
-.photo img {
-    width: 300px;
-    height: 200px;         /* 높이를 고정해서 균일하게 만듦 */
-    object-fit: cover;     /* 사진이 찌그러지지 않게 꽉 채움 */
-    border-radius: 8px;    /* 모서리를 둥글게 */
-    transition: transform 0.3s;
+.photo {
+    perspective: 1000px; 
+    height: 250px;
 }
 
-.photo img:hover {
-    transform: scale(1.05); /* 마우스 올리면 살짝 커짐 */
-    cursor:auto;
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* 더 쫀득한 애니메이션 */
+    transform-style: preserve-3d;
+}
+
+.photo:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* 사파리 대응 */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-front {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 앞면 이미지가 카드 꽉 차게 */
+.card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-back {
+  background: white;
+  padding: 20px;
+  transform: rotateY(180deg);
+  line-height: 1.4;
+  font-size: 11pt;
+  border-style:solid;
+  border-color:black;
+  border: width 1 px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* 클릭해서 뒤집혔을 때 */
+.photo.is-flipped .card-inner {
+  transform: rotateY(180deg);
 }
