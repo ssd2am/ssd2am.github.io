@@ -7,13 +7,23 @@
     background-color:rgb(238, 236, 230);
 }
 
+:root{
+    --blue:cadetblue;
+}
+
+::selection{
+    background-color:var(--blue);
+    color:white;
+}
+
 a, a:visited, a:active{
     color:black;
     text-decoration: none;
+    cursor: default;
 }
 
 a:hover{
-    color:cadetblue;
+    color:var(--blue);
 }
 
 .container{
@@ -65,13 +75,22 @@ a:hover{
     width:300px;
 }
 
+.divider::before{
+    content:"───────── 𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃 ────────";
+}
+
+.divider{  
+    width: 100%;
+     text-align: center;
+}
+
 h1{
     color:dimgray;
     font-size:15pt;
 }
 
 h1:hover{
-    color:darkcyan;
+    color:var(--blue);
     font-size:18pt;
     transition:1s;
 }
@@ -80,3 +99,27 @@ ul li{
     list-style:none;
     font-family:Georgia, 'Times New Roman', Times, serif;}
 ul li::before{content:"□  ";}
+
+.gallery {
+    background:white;
+    margin:auto;
+    padding:50px;
+    max-width:1100px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;                             /* 사진 사이 간격 */
+    margin-top: 20px;
+}
+
+.photo img {
+    width: 300px;
+    height: 200px;         /* 높이를 고정해서 균일하게 만듦 */
+    object-fit: cover;     /* 사진이 찌그러지지 않게 꽉 채움 */
+    border-radius: 8px;    /* 모서리를 둥글게 */
+    transition: transform 0.3s;
+}
+
+.photo img:hover {
+    transform: scale(1.05); /* 마우스 올리면 살짝 커짐 */
+    cursor:auto;
+}
