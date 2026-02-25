@@ -3,6 +3,7 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
+
     body{
     background-color:rgb(238, 236, 230);
 }
@@ -73,6 +74,9 @@ a:hover{
 
 .sidebar {
     width:300px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .divider::before{
@@ -98,6 +102,7 @@ h1:hover{
 ul li{
     list-style:none;
     font-family:Georgia, 'Times New Roman', Times, serif;}
+
 ul li::before{content:"□  ";}
 
 .gallery {
@@ -165,9 +170,7 @@ ul li::before{content:"□  ";}
   transform: rotateY(180deg);
   line-height: 1.4;
   font-size: 11pt;
-  border-style:solid;
-  border-color:black;
-  border: width 1 px;
+  border: 1px solid black;
 
   display: flex;
   flex-direction: column;
@@ -177,6 +180,23 @@ ul li::before{content:"□  ";}
 
 .photo.is-flipped .card-inner {
   transform: rotateY(180deg);
+}
+
+
+.card-back ul {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.card-back ul li {
+  margin: 0;
+  padding: 0;
+}
+
+.card-back ul li::before {
+  content: "□";
+  display: inline-block;
+  width: 1.2em;        /* 불릿 자리 폭 고정 */
 }
 
 @media (max-width: 600px) {
@@ -217,4 +237,37 @@ ul li::before{content:"□  ";}
     width: 100%;
     height: 420px; /* 취향으로 조절 */
   }
+}
+
+.now {
+    height: 150px;
+    border: 1px dotted var(--blue);
+    padding: 14px;
+    margin-bottom: 18px;
+    background: white;
+    font-size: 10.5pt;
+    line-height: 1.5;
+}
+
+.now-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.now-label {
+  font-size: 9pt;
+  letter-spacing: 1px;
+  text-transform: lowercase;
+  color: var(--blue);
+}
+
+.now-date {
+  font-size: 8.5pt;
+  color: gray;
+}
+
+.now p {
+  margin: 0;
 }
