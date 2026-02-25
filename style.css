@@ -1,0 +1,31 @@
+pre{
+    color:rgb(65, 65, 65);
+}
+body{
+    background-color:rgb(238, 236, 230);
+}
+.container{
+    display:flex;
+    gap:30px;
+    max-width:900px;
+    margin:auto;
+    padding: 10px 20px;
+}
+.main-content{
+    width: 450px;
+    padding: 10px 20px;
+    background-color: rgb(255, 255, 255);
+
+}
+.sidebar {
+    width:300px;
+}
+h1{
+    color:dimgray;
+    font-size:15pt;
+}
+h1:hover{
+    color:darkcyan;
+    font-size:18pt;
+    transition:1s;
+}
