@@ -175,7 +175,18 @@ ul li::before{content:"□  ";}
   align-items: flex-start;
 }
 
-/* 클릭해서 뒤집혔을 때 */
 .photo.is-flipped .card-inner {
   transform: rotateY(180deg);
+}
+
+@media (max-width: 600px) {
+  .gallery {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .photo {
+    height: 260px; /* 필요하면 조절 */
+  }
 }
