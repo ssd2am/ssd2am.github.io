@@ -189,4 +189,32 @@ ul li::before{content:"□  ";}
   .photo {
     height: 260px; /* 필요하면 조절 */
   }
+
+
+  .container {
+    flex-direction: column;
+    gap: 16px;
+    padding: 12px;
+  }
+
+  .main-content,
+  .sidebar {
+    width: 100%;
+  }
+
+  .main-content {
+    padding: 14px;
+  }
+
+  /* 메인 이미지가 화면 밖으로 안 나가게 */
+  .img-wrapper {
+    width: 100%;
+    max-width: 400px; /* 원래 감성 유지용, 필요하면 삭제 */
+  }
+
+  /* iframe도 반응형 */
+  .sidebar iframe {
+    width: 100%;
+    height: 420px; /* 취향으로 조절 */
+  }
 }
