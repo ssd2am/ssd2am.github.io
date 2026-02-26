@@ -53,7 +53,6 @@ a:hover{
     display: block;
 }
 
-/* 2. 투명 클릭 영역 (핫스팟) */
 .hotspot {
     position: absolute;    /* 이미지 위로 띄움 */
     
