@@ -21,6 +21,7 @@ a, a:visited, a:active{
     color:black;
     text-decoration: none;
     cursor: default;
+    text-decoration: underline dotted rgb(184, 183, 183);
 }
 
 a:hover{
