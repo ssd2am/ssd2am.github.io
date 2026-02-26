@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Archive</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .archive-container { max-width: 500px; margin: 50px auto; padding: 20px; }
+        .tweet-item { background: white; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 4px; }
+        .back-link { display: block; margin-bottom: 20px; font-size: 0.9rem; color: cadetblue; text-decoration: none; }
+        .archive-header { border-bottom: 1px solid #000; margin-bottom: 30px; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="archive-container">
+        <a href="../" class="back-link">← back to farm</a>
+        <div class="archive-header">
+            <h2>now archive</h2>
+        </div>
+        <div id="archive-list"></div>
+    </div>
+
+    <script src="../now-data.js"></script>
+    <script>
+        const list = document.getElementById('archive-list');
+        if (typeof nowTweets !== 'undefined') {
+            nowTweets.forEach(tweet => {
+                const item = document.createElement('div');
+                item.className = 'tweet-item';
+                item.innerHTML = `<p>${tweet.content}</p>`;
+                list.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
