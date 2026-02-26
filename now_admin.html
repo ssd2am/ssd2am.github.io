@@ -18,71 +18,37 @@
 <body>
     <div class="admin-card">
         <h2>Now Box Editor</h2>
-        <label>GitHub Personal Access Token</label>
-        <input type="password" id="gh-token" placeholder="ghp_로 시작하는 토큰 입력">
         <label>새로운 소식</label>
         <textarea id="new-content" placeholder="내용을 입력하세요..."></textarea>
-        <button onclick="updateGitHubFile()">업데이트 하기</button>
+        <button onclick="updateNow()">업데이트 하기</button>
         <p id="status-msg" style="margin-top:15px; font-size:0.85rem; color: #666;"></p>
     </div>
 
     <script>
-        async function updateGitHubFile() {
-            const token = document.getElementById('gh-token').value;
-            const content = document.getElementById('new-content').value;
-            const status = document.getElementById('status-msg');
+            async function updateNow() {
+        const content = document.getElementById('new-content').value;
+        const status = document.getElementById('status-msg');
+        
+        status.innerText = "비서에게 전달 중...";
 
-            // 1. 설정 정보 (본인의 정보로 수정하세요)
-            const owner = 'ssd2am'; 
-            const repo = 'ssd2am/ssd2am.github.io'; 
-            const path = 'now.json'; // 수정할 파일 경로
+        try {
+            const response = await fetch('/api/update', { // 우리가 만든 api 주소
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: content })
+            });
 
-            if(!token || !content) {
-                alert("토큰과 내용을 모두 입력해주세요!");
-                return;
+            const result = await response.json();
+            if (response.ok) {
+                status.innerText = "✅ " + result.message;
+                document.getElementById('new-content').value = "";
+            } else {
+                status.innerText = "❌ 실패: " + result.message;
             }
-
-            status.innerText = "업데이트 중...";
-
-            try {
-                // 2. 현재 파일의 'SHA'(버전 아이디)를 먼저 가져와야 수정이 가능합니다.
-                const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
-                const fileData = await getRes.json();
-                const sha = fileData.sha;
-
-                // 3. 새로운 데이터 준비
-                const now = new Date();
-                const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-                
-                const newData = {
-                    date: dateStr,
-                    content: content.replace(/\n/g, "<br>") // 줄바꿈을 <br>로 변환
-                };
-
-                // 4. GitHub API에 파일 업데이트 요청 (PUT)
-                const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: "Update now.json via admin page",
-                        content: btoa(unescape(encodeURIComponent(JSON.stringify(newData, null, 2)))), // 데이터를 Base64로 인코딩
-                        sha: sha
-                    })
-                });
-
-                if(putRes.ok) {
-                    status.innerText = "✅ 성공! 잠시 후 사이트에 반영됩니다.";
-                    document.getElementById('new-content').value = "";
-                } else {
-                    status.innerText = "❌ 실패: 토큰 권한을 확인하세요.";
-                }
-            } catch (err) {
-                status.innerText = "❌ 에러 발생: " + err.message;
-            }
+        } catch (err) {
+            status.innerText = "❌ 연결 오류: " + err.message;
         }
+    }
     </script>
 </body>
 </html>
