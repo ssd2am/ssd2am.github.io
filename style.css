@@ -1,16 +1,24 @@
 *{
     box-sizing: border-box;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: sans-serif;
+    font-size: 9pt;
 }
 
 
     body{
-    background-color:rgb(238, 236, 230);
+    background-color: var(--beige);
+    background-image: 
+        linear-gradient(to right, white 1px, transparent 1px),
+        linear-gradient(to bottom, white 1px, transparent 1px);
+    background-size: 60px 60px;
+    margin: 0;
+    padding: 0;
 }
 
 :root{
     --blue:cadetblue;
-    --beige:rgb(238, 236, 230)
+    --beige:rgb(238, 236, 230);
+    --grey:rgb(108, 108, 108);
 }
 
 ::selection{
@@ -27,6 +35,25 @@ a, a:visited, a:active{
 
 a:hover{
     color:var(--blue);
+}
+
+h6{
+  color: var(--grey);
+  font-family: 
+  font-size: 8pt;
+  font-style: italic;
+  font-weight: normal;
+  margin: 2px;
+}
+
+h6 a, h6 a:visited, h6 a:active{
+    color:var(--grey);
+    text-decoration: underline dotted var(--grey);
+    
+}
+
+h6 a:hover {
+    color: var(--blue); 
 }
 
 .button{
@@ -49,6 +76,31 @@ a:hover{
 
 }
 
+.navigator{
+  display: flex;
+}
+
+.nav-container {
+    display: flex;     
+    gap: 50px;         
+    justify-content: center; 
+    margin-top: 20px;
+}
+
+.nav-container button {
+    background: white;
+    border: 1px solid black; 
+    padding: 5px 12px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.nav-container button:hover {
+    background-color: black;
+    color: white;
+}
+
 .img-wrapper {
     position: relative;
     display: block;        
@@ -66,16 +118,6 @@ a:hover{
     /* Optional: filter: sepia(0.1); -> Adds a very subtle vintage feel */
 }
 
-#random-text {
-    margin-top: 12px;
-    font-size: 10pt;
-    color: dimgray;
-    text-align: center;
-    font-family: 'Courier New', Courier, monospace;
-    font-style: italic;
-    line-height: 1.4;
-}
-
 .br-img-wrapper {
     position: relative;    
     display: inline-block; 
@@ -90,19 +132,30 @@ a:hover{
 .hotspot {
     position: absolute;    
     
-    /* 📍 여기서 위치와 크기를 %로 조절하세요! */
     top: 20%;             
     left: 43%;           
     width: 12%;         
     height: 17%;         
     
-    border-radius: 50%;   /* 원형으로 만들고 싶다면 추가 */
+    border-radius: 50%;
     cursor: pointer;
 }
 
-.playlist{
+#random-text {
+    margin-top: 12px;
+    font-size: 10pt;
+    color: dimgray;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+
+.sub-box{
     border:dotted 1px;
     padding: 10px;
+    margin:10px;
 }
 
 .sidebar {
@@ -113,7 +166,7 @@ a:hover{
 }
 
 .divider::before{
-    content:"───────── 𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃 ────────";
+    content:"──────── 𝄃𝄃𝄂𝄂𝄀𝄁𝄃𝄂𝄂𝄃 ───────";
 }
 
 .divider{  
@@ -126,15 +179,10 @@ h1{
     font-size:15pt;
 }
 
-h1:hover{
-    color:var(--blue);
-    font-size:18pt;
-    transition:1s;
-}
 
 ul li{
     list-style:none;
-    font-family:Georgia, 'Times New Roman', Times, serif;}
+    }
 
 ul li::before{content:"□  ";}
 
@@ -231,6 +279,7 @@ ul li::before{content:"□  ";}
   display: inline-block;
   width: 1.2em;        /* 불릿 자리 폭 고정 */
 }
+
 
 @media (max-width: 600px) {
   .gallery {

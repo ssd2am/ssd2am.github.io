@@ -86,8 +86,16 @@
                     <img src="../assets/natalie06.JPG" alt="6" />
                 </div>
                 <div class="card-back">
+                    <p>91년생 나탈리: 뭐에 꽂혀 살아?</p>
                     <div class="divider"></div>
-                    to be continued
+                    <ul>
+                        <li>엑셀로 가계부 만들기</li>
+                        <li>내돈내산 내 방 인테리어</li>
+                        <li>indie web 서핑</li>
+                        <li>대바늘로 꽈배기 뜨기</li>
+                        <li>경제와 재테크 기초 공부</li>
+                        <li>너만 오면 완성되는 4인 마작팟...</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -97,8 +105,9 @@
                     <img src="../assets/natalie07.jpg" alt="7" />
                 </div>
                 <div class="card-back">
+                    <p>91년생 나탈리: 지금 무슨 생각해?</p>
                     <div class="divider"></div>
-                    to be continued
+                    <p>이력서를 쓸 때도 느끼는 거지만 나를 소개하는 건 정말 어려운 일이구나. "어떤 얘기를 해야 재밌을까?" 싶다가도, 사람들은 근본적으로 타인에게 관심이 없는데 아무리 내가 머리를 굴려 PR을 해봤자 없던 흥미가 생길까 싶어. 새로운 관심을 갈구하기보단, 이미 나에게 관심을 갖고 여기까지 찾아온 너에게 고맙다는 말을 남길게!</p>
                 </div>
             </div>
         </div>
@@ -108,8 +117,9 @@
                     <img src="../assets/natalie08.JPG" alt="8" />
                 </div>
                 <div class="card-back">
+                    <p>91년생 나탈리: what's in my bag?</p>
                     <div class="divider"></div>
-                    to be continued
+                   <p>미니소 보조배터리 / 무인양품 블랙 메쉬 미니 파우치 / QCY 멜로버즈 화이트 블루투스 이어폰 / 입생로랑 따뚜아쥬 꾸뛰르 매트 사틴 8호 Black Red Code / 토리버치 카드지갑 / 아이패드 10세대 / 블루투스 키보드 / 뜨개 프로젝트 백 / 손수건 / 미니소 휴대용 티슈 / 물티슈 / 치실 / 다이소 알콜 스왑 / 기름종이 / 차 키 </p>
                 </div>
             </div>
         </div>
@@ -125,5 +135,25 @@
             </div>
         </div>
     </div>
+   <div class="nav-container">
+        <div class="navigator">
+            <a href="../index.html">◀ back to main</a>
+        </div>
+        <div class="navigator">
+            <a href="#" onclick="flipAllCards(); return false;">↻ flip all</a>
+        </div>
+    </div>
+
+<script>
+function flipAllCards() {
+    // 1. 모든 .photo 요소를 가져옵니다.
+    const cards = document.querySelectorAll('.photo');
+    
+    // 2. 각 카드마다 'is-flipped' 클래스를 껏다 켭니다.
+    cards.forEach(card => {
+        card.classList.toggle('is-flipped');
+    });
+}
+</script>
 </body>
 </html>

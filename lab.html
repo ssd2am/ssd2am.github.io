@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sent from LG smart fridge</title>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="sub-box">
+                can i pet that dawg?¯\_(ツ)_/¯ 
+                <a href="petthat.html"><button>pet that dawg ૮₍ • ᴥ • ₎ა</button></a>
+                <h6>inpired by <a href="https://youtu.be/ybhNTqetubQ?si=08Mf673xaXA_SAD9" target="_blank">two</a> <a href="https://knowyourmeme.com/memes/so-close-that-is-a-shape-%F0%9F%92%95" target="_blank">memes</a> that live in my brain rent-free</h6>
+            </div>
+            <div class="sub-box">
+                <p style="text-align: center;">똑똑... 누가 왔나봐요!🐦‍⬛</p>
+                <div class="nav-container">
+                    <button onclick="spawnCrow()">let them in</button> 
+                    <button onclick="byeCrow()">say good bye!</button>
+                </div>
+            </div>
+            <img src="../assets/crow01.png" id="mystery-crow"  style="display: none; position: fixed; cursor: pointer; z-index: 1000; width: 80px;" onmouseover="this.src='../assets/crow02.png'" onmouseout="this.src='../assets/crow01.png'" onclick="moveCrow()">
+        </div>
+        <div class="sidebar">
+            <div class="sub-box">i might use this space later to jot down inspirations</div>
+        </div>
+    </div>
+    <div class="nav-container">
+        <div class="navigator"><a href="index.html">◀ back to main</a></div>
+    </div>
+    
+
+<script>
+    const crow = document.getElementById('mystery-crow');
+
+    function moveCrow() {
+        // 화면 안에서만 움직이도록 계산
+        const maxX = window.innerWidth - 100;
+        const maxY = window.innerHeight - 100;
+        
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
+        
+        crow.style.left = randomX + 'px';
+        crow.style.top = randomY + 'px';
+    }
+
+    function spawnCrow() {
+        crow.style.display = 'block'; 
+        moveCrow(); // 나타나자마자 랜덤 위치로 점프!
+    }
+
+    function byeCrow() {
+        crow.style.display = 'none'; 
+    }
+</script>
+
+</body>
+</html>
