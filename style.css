@@ -10,6 +10,7 @@
 
 :root{
     --blue:cadetblue;
+    --beige:rgb(238, 236, 230)
 }
 
 ::selection{
@@ -28,6 +29,11 @@ a:hover{
     color:var(--blue);
 }
 
+.button{
+  background: var(--beige);
+  border: 1px dotted black;
+}
+
 .container{
     display:flex;
     gap:30px;
@@ -44,18 +50,45 @@ a:hover{
 }
 
 .img-wrapper {
-    position: relative;    /* 자식(hotspot)의 기준점이 됨 */
-    display: inline-block; /* 이미지 크기에 딱 맞게 상자 크기 조절 */
-    width: 400px;          /* 기존처럼 고정하거나 100%로 설정 가능 */
+    position: relative;
+    display: block;        
+    margin: 20px auto;     
+    width: 100%;           
+    max-width: 400px;      
+    background: white;    
+    padding: 10px;        
+    border: 1px solid #ddd; 
 }
 
 .img-wrapper img {
-    width: 100%;           /* 상자 너비에 맞춤 */
+    width: 100%;
+    display: block;
+    /* Optional: filter: sepia(0.1); -> Adds a very subtle vintage feel */
+}
+
+#random-text {
+    margin-top: 12px;
+    font-size: 10pt;
+    color: dimgray;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.br-img-wrapper {
+    position: relative;    
+    display: inline-block; 
+    width: 400px;         
+}
+
+.br-img-wrapper img {
+    width: 100%;          
     display: block;
 }
 
 .hotspot {
-    position: absolute;    /* 이미지 위로 띄움 */
+    position: absolute;    
     
     /* 📍 여기서 위치와 크기를 %로 조절하세요! */
     top: 20%;             

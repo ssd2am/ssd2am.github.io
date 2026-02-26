@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet that dawg...?</title>
+</head>
+<body>
+    <div class="img-wrapper">
+            <img src="assets/nana01.JPG" id="random-img" width="400">
+            <p id="random-text" style="margin-top: 10px; font-style: italic;"></p>
+    </div>
+    <div class="navigator"><a href="index.html">◀ back to main</a></div>
+</body>
+<script>
+    // 1. 이미지 경로와 텍스트를 한 쌍으로 묶어서 리스트를 만듭니다.
+    const myData = [
+        { img: "assets/nana01.JPG", text: "So close! that's a cat💞" },
+        { img: "assets/nana02.JPG", text: "So close! that's a cat💞" },
+        { img: "assets/nana03.jpg", text: "omg no that's not cool wth!! Nana will be reporting you to hr" },
+        { img: "assets/nana04.jpg", text: "that was not a pet nor a dawg but nana says it's okay" },
+        { img: "assets/nana05.jpg", text: "no, but we offer you this albino dubai chewy cookie for the inconvenience." },
+        { img: "assets/nana10.jpeg", text: "So close! that's a cat💞" }
+    ];
+
+    window.onload = function() {
+        // 2. 무작위로 하나를 선택합니다.
+        const randomIndex = Math.floor(Math.random() * myData.length);
+        const selected = myData[randomIndex];
+
+        // 3. 이미지와 텍스트를 각각 업데이트합니다.
+        const imgElement = document.getElementById('random-img');
+        const textElement = document.getElementById('random-text');
+
+        if (imgElement) imgElement.src = selected.img;
+        if (textElement) textElement.innerText = selected.text;
+    };
+</script>
+</html>
