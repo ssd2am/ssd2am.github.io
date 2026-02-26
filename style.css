@@ -260,7 +260,7 @@ ul li::before{content:"□  ";}
   }
 
   /* 메인 이미지가 화면 밖으로 안 나가게 */
-  .img-wrapper {
+  .br-img-wrapper, .img-wrapper {
     width: 100%;
     max-width: 400px; /* 원래 감성 유지용, 필요하면 삭제 */
   }
