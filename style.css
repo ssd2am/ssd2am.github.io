@@ -85,7 +85,6 @@ h6 a:hover {
     padding: 20px;
     background-color: rgb(255, 255, 255);
     border: 1px solid black;
-    display:flex;
     justify-content: space-between;
 }
 
