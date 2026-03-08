@@ -81,7 +81,7 @@ h6 a:hover {
 }
 
 .center-content{
-    width: 800px;
+    width: auto;
     padding: 20px;
     background-color: rgb(255, 255, 255);
     border: 1px solid black;
@@ -166,8 +166,7 @@ h6 a:hover {
 .list-item-box h2 {
     margin-top: 0;
     font-size: 13pt;
-    text-transform: lowercase; /* 나탈리님 사이트의 무드에 맞춰 소문자로 */
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px dashed black;
     padding-bottom: 10px;
 }
 
@@ -383,6 +382,9 @@ ul li::before{content:"□  ";}
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px
 }
 
 .photo.is-flipped .card-inner {
@@ -450,6 +452,13 @@ ul li::before{content:"□  ";}
     width: 100%;
     height: 420px; /* 취향으로 조절 */
   }
+
+
+    .list-board {
+    column-count: 1;
+    padding: 20px;
+    gap: 16px;
+  }
 }
 
 .chat-box {
@@ -470,6 +479,7 @@ ul li::before{content:"□  ";}
     background: white;
     font-size: 10.5pt;
     line-height: 1.5;
+    overflow-y: auto;
 }
 
 .now-header {
