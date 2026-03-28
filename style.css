@@ -281,6 +281,19 @@ h6 a:hover {
     margin:10px;
 }
 
+.sub-box ul{
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.sub-box li{
+    display:flex;
+    align-items: center;
+    margin-left: 0;
+}
+
+.sub-box ul li::before{content:"  ";}
+
 .sidebar {
     width:300px;
     display: flex;
