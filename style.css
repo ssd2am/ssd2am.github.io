@@ -292,6 +292,14 @@ h6 a:hover {
     margin-left: 0;
 }
 
+.sub-box li strong{
+    margin-right: 5px;
+}
+
+.sub-box li a{
+    margin: 0 4px
+}
+
 .sub-box ul li::before{content:"  ";}
 
 .sidebar {
