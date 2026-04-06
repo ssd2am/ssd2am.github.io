@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Egg Tracker 🥚</title>
+    <style>
+        :root {
+            --blue: cadetblue;
+            --beige: rgb(238, 236, 230);
+            --grey: rgb(108, 108, 108);
+        }
+        body {
+            background-color: var(--beige);
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            border: 2px solid black; /* 위젯 느낌을 위한 테두리 */
+        }
+        .container {
+            text-align: center;
+            padding: 15px;
+            transition: background-color 0.5s;
+            width: 100%;
+            height: 100%;
+        }
+        /* 알림이 울릴 때 깜빡이는 애니메이션 */
+        .alert-mode {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { background-color: var(--beige); }
+            50% { background-color: var(--blue); }
+            100% { background-color: var(--beige); }
+        }
+        h2 { font-size: 14pt; color: var(--grey); margin-bottom: 10px; }
+        .status-emoji { font-size: 30pt; margin: 10px 0; }
+        .timer-text { font-size: 12pt; font-weight: bold; margin-bottom: 15px; }
+        
+        button {
+            background: white;
+            border: 1px solid black;
+            padding: 6px 12px;
+            margin: 3px;
+            font-family: Georgia, serif;
+            font-style: italic;
+            cursor: pointer;
+            width: 80px;
+        }
+        button:hover { background: black; color: white; }
+        button:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
+
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: #ddd;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--blue);
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="widget">
+    <h2 id="title">Dragon Tracker</h2>
+    <div class="status-emoji" id="emoji">💤</div>
+    <div class="timer-text" id="timerDisplay">Paused</div>
+    
+    <div class="buttons">
+        <button id="btnAction" onclick="collectEgg()">알 수령</button>
+        <button id="btnSnooze" onclick="snooze()">휴식</button>
+        <button id="btnResume" onclick="resume()">재개</button>
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+</div>
+
+<script>
+    let timer = null;
+    let timeLeft = 300; // 5분 = 300초
+    let isPaused = true;
+
+    // 브라우저 알림 권한 요청
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
+
+    function updateDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timerDisplay').innerText = 
+            `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        const progress = ((300 - timeLeft) / 300) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+
+    function sendNotification() {
+        if (Notification.permission === "granted") {
+            new Notification("알을 수령할 시간이에요! 🐉", {
+                body: "5분이 지났습니다. 지금 바로 확인하세요!",
+                icon: "assets/favicon.png" // Natalie님의 파비콘 경로
+            });
+        }
+        document.getElementById('widget').classList.add('alert-mode');
+        document.getElementById('emoji').innerText = "🐣";
+    }
+
+    function collectEgg() {
+        clearInterval(timer);
+        document.getElementById('widget').classList.remove('alert-mode');
+        document.getElementById('emoji').innerText = "🥚";
+        isPaused = false;
+        timeLeft = 300; // 5분 리셋
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateDisplay();
+            } else {
+                clearInterval(timer);
+                sendNotification();
+            }
+        }, 1000);
+    }
+
+    function snooze() {
+        clearInterval(timer);
+        isPaused = true;
+        document.getElementById('widget').classList.remove('alert-mode');
+        document.getElementById('emoji').innerText = "💤";
+        document.getElementById('timerDisplay').innerText = "Paused";
+        document.getElementById('progressBar').style.width = "0%";
+    }
+
+    function resume() {
+        // 재개 시 즉시 알림 울리고 수령 대기 상태로 전환
+        timeLeft = 0;
+        updateDisplay();
+        sendNotification();
+    }
+
+    updateDisplay();
+</script>
+</body>
+</html>
