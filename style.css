@@ -68,31 +68,33 @@ h6 a:hover {
     display:flex;
     gap:30px;
     max-width:900px;
+    width:800px;
     margin:auto;
     padding: 10px 20px;
+}
+
+.box{
+    background-color: rgb(255, 255, 255);
+    border: 1px solid black;
+
 }
 
 .main-content{
     width: 450px;
     padding: 10px 20px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid black;
-
 }
 
 .center-content{
     width: auto;
     padding: 20px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid black;
     justify-content: space-between;
 }
 
 .header-content{
     width: auto;
-    padding: 10px;
-    background-color: rgb(255, 255, 255);
-    border: 1px dotted black;
+    padding: 20px 60px;
+    background-color:black;
+    color: white;
     justify-content:space-around space-between;
 }
 
@@ -100,6 +102,7 @@ h6 a:hover {
     font-size: 13pt;
     text-transform: lowercase;
     margin-top: 0px;
+    color: white;
 }
 
 .menu-container {
@@ -281,23 +284,31 @@ h6 a:hover {
     margin:10px;
 }
 
-.sub-box ul{
-    padding-left: 0;
-    margin-left: 0;
+.sub-box ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
 
-.sub-box li{
-    display:flex;
-    align-items: center;
-    margin-left: 0;
+.sub-box li {
+    display: flex;            /* 이모지와 텍스트박스를 가로로 배치 */
+    align-items: flex-start;  /* 상단 기준 정렬 */
 }
 
-.sub-box li strong{
+.sub-box .icon {
+    width: 20px;              /* 이모지 영역의 너비를 고정! */
+    flex-shrink: 0;           /* 자리가 좁아져도 영역 유지 */
+    text-align: left;
+}
+
+.sub-box .content {
+    flex-grow: 1;             /* 남은 공간을 텍스트 영역이 다 차지함 */
+    word-break: keep-all;     /* 한글 단어가 중간에 잘리지 않게 함 */
+}
+
+.sub-box strong {
     margin-right: 5px;
-}
-
-.sub-box li a{
-    margin: 0 4px
+    font-weight: bold;
 }
 
 .sub-box ul li::before{content:"  ";}
@@ -319,7 +330,7 @@ h6 a:hover {
 }
 
 h1{
-    color:dimgray;
+    color:var(--blue);
     font-size:15pt;
 }
 
@@ -484,30 +495,33 @@ ul li::before{content:"□  ";}
 
 .chat-box {
     height: 480px;
-    border: 1px dotted var(--blue);
     padding: 15px;
     margin-bottom: 18px;
-    background: white;
     font-size: 10.5pt;
     line-height: 1.5;
 }
 
 .now {
-    height: 150px;
-    border: 1px dotted var(--blue);
+    height: 200px;
     padding: 14px;
     margin-bottom: 15px;
-    background: white;
     font-size: 10.5pt;
     line-height: 1.5;
-    overflow-y: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .now-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
+    height: 15px;
+    margin-bottom: 8px;
+}
+
+.now-content {
+    flex-grow: 1;      /* 남은 공간을 모두 차지 */
+    overflow-y: auto;  /* 내용이 길어지면 여기서만 스크롤 발생 */
+    margin: 0;
+    padding-right: 5px; /* 스크롤바와 글자가 붙지 않게 여백 */
 }
 
 .now-label {

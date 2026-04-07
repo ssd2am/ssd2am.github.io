@@ -1,6 +1,7 @@
 // {content: ""},
 
 const nowTweets = [
+    {content: "라즈베리 파이🫐에 갑자기 꽂히다. 처음 목표했던 프로젝트는 Magic Mirror 였는데 목공이며 양방향 거울이며 생각보다 스케일이 커질 것 같아서 우선 <a href='https://www.raspberrypi.com/tutorials/running-pi-hole-on-a-raspberry-pi/' target='_blank'>파이홀</a> 제작을 목표로 조금씩 정보 모아보는 중. 사무실 설치하겠다고 하면 대표님이 프로젝트 펀딩해주지 않을까 하여...ㅎㅎ 이렇게 얻어내는 합법적 자기계발비 복지."},
     {content: "I've never really understood people who make their entire personality about their diagnosis. But now that I'm so close to getting an answer regarding my neurodivergence which has been labeled as 'unspecified' for over a decade at this point, I actually kind of get it. It feels like you're being given a lens, a new tool to explain so many things that have been a blur or a fog your whole life. I'm sure the novelty and the sense of enlightenment will wear off soon enough, but until then, I’m going to be THAT person, I fear."},
     {content: "30대 중반 접어든 뒤로 사람은 계속 만나고 싶은데 새 사람 사귀는 것이 지쳐서 인간관계 냉장고 파먹기 시작함👵"},
     {content: "사람들 다 코트 입고 멋쟁이가 되었다 봄인가보다"},
