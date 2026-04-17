@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐦‍⬛</text></svg>">
+    <title>STKS Team Timer ⏳</title>
+    <style>
+        :root { --blue: cadetblue; --beige: rgb(238, 236, 230); --grey: rgb(108, 108, 108); }
+        body { background-color: var(--beige); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 800px; background: white; border: 1px solid black; padding: 30px; box-shadow: 5px 5px 0px rgba(0,0,0,0.1); }
+        h1 { font-size: 18pt; color: var(--grey); text-align: center; margin-bottom: 30px; }
+        
+        .project-group { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 5px; }
+        .project-title { font-size: 14pt; font-weight: bold; margin-bottom: 15px; color: var(--blue); border-bottom: 2px solid var(--blue); padding-bottom: 5px; }
+        
+        .timer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .timer-card { border: 1px solid #eee; padding: 15px; text-align: center; background: #fafafa; }
+        .timer-card.running { border-color: var(--blue); background: #f0fdfd; box-shadow: inset 0 0 10px rgba(95, 158, 160, 0.1); }
+        
+        .member-info { margin-bottom: 10px; }
+        .member-info .emoji { font-size: 18pt; display: block; }
+        .member-info .name { font-weight: bold; font-size: 10pt; }
+
+        .display-time { font-family: 'Courier New', monospace; font-size: 16pt; font-weight: bold; margin: 10px 0; color: #333; }
+        
+        .controls button { padding: 5px 15px; cursor: pointer; border: 1px solid black; background: white; font-size: 9pt; }
+        .controls button:hover { background: #eee; }
+        .btn-start { color: var(--blue); border-color: var(--blue) !important; }
+        .btn-stop { color: red; border-color: red !important; }
+        
+        .manual-edit { margin-top: 10px; font-size: 8pt; color: gray; text-decoration: underline; cursor: pointer; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: none; justify-content: center; align-items: center; z-index: 100; }
+    </style>
+</head>
+<body>
+
+<div id="loading" class="loading-overlay">데이터 동기화 중...</div>
+
+<div class="app-container">
+    <h1>STKS Team Timer ⏳</h1>
+    <div id="timer-display-area">
+        </div>
+</div>
+
+<script>
+    const GAS_URL = "https://script.google.com/a/macros/stks.kr/s/AKfycbxw9lsriJ6AF8HxncUOoBA5aWvb1LFcDOxlfFh5I1BEiVf5dNRJIrN7aLh6Mdi7xyPEMg/exec"; 
+    let timerData = [];
+    let intervalId = null;
+
+    // 1. 데이터 불러오기
+    async function fetchData() {
+        document.getElementById('loading').style.display = 'flex';
+        try {
+            const response = await fetch(GAS_URL);
+            timerData = await response.json();
+            renderTimers();
+        } catch (e) {
+            console.error("데이터 로드 실패:", e);
+            alert("시트 데이터를 가져오지 못했습니다. URL이나 권한을 확인하세요.");
+        }
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    // 2. 타이머 렌더링
+    function renderTimers() {
+        const area = document.getElementById('timer-display-area');
+        area.innerHTML = '';
+
+        // 프로젝트별로 그룹화
+        const projects = [...new Set(timerData.map(item => item.ProjectName))];
+
+        projects.forEach(proj => {
+            const projSection = document.createElement('div');
+            projSection.className = 'project-group';
+            projSection.innerHTML = `<div class="project-title">${proj}</div>`;
+            
+            const grid = document.createElement('div');
+            grid.className = 'timer-grid';
+
+            timerData.filter(t => t.ProjectName === proj).forEach(member => {
+                const card = document.createElement('div');
+                card.className = `timer-card ${member.IsRunning ? 'running' : ''}`;
+                
+                // 현재 시간 계산 (실행 중이면 시작 시간으로부터 경과 시간 합산)
+                let totalSec = Number(member.AccumulatedTime);
+                if (member.IsRunning && member.StartTime) {
+                    const start = new Date(member.StartTime);
+                    const now = new Date();
+                    totalSec += Math.floor((now - start) / 1000);
+                }
+
+                card.innerHTML = `
+                    <div class="member-info">
+                        <span class="emoji">${getEmoji(member.MemberID)}</span>
+                        <span class="name">${member.MemberID}</span>
+                    </div>
+                    <div class="display-time" id="time-${proj}-${member.MemberID}">${formatTime(totalSec)}</div>
+                    <div class="controls">
+                        ${member.IsRunning ? 
+                            `<button class="btn-stop" onclick="sendAction('${proj}', '${member.MemberID}', 'STOP')">STOP</button>` : 
+                            `<button class="btn-start" onclick="sendAction('${proj}', '${member.MemberID}', 'START')">START</button>`
+                        }
+                    </div>
+                    <div class="manual-edit" onclick="manualEdit('${proj}', '${member.MemberID}', ${totalSec})">수동 편집</div>
+                `;
+                grid.appendChild(card);
+            });
+            projSection.appendChild(grid);
+            area.appendChild(projSection);
+        });
+    }
+
+    // 3. 동작 신호 보내기 (START/STOP/EDIT)
+    async function sendAction(proj, member, action, extraData = {}) {
+        document.getElementById('loading').style.display = 'flex';
+        const body = { projectName: proj, memberId: member, action: action, ...extraData };
+        
+        try {
+            await fetch(GAS_URL, {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+            await fetchData(); // 완료 후 다시 불러오기
+        } catch (e) {
+            alert("동작 수행 중 오류가 발생했습니다.");
+        }
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    // 수동 편집 (초 단위 입력 혹은 hh:mm:ss)
+    function manualEdit(proj, member, currentSec) {
+        const newTimeStr = prompt("새로운 시간을 입력하세요 (예: 01:20:30 또는 총 초 단위)", formatTime(currentSec));
+        if (newTimeStr) {
+            let seconds = 0;
+            if (newTimeStr.includes(':')) {
+                const parts = newTimeStr.split(':').map(Number);
+                seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+            } else {
+                seconds = Number(newTimeStr);
+            }
+            sendAction(proj, member, 'MANUAL_EDIT', { newTime: seconds });
+        }
+    }
+
+    // 유틸리티 함수들
+    function formatTime(sec) {
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function getEmoji(id) {
+        const emojiMap = { 'RK': '🔴', 'BR': '🟣', 'SP': '🟢', 'NL': '🟡' };
+        return emojiMap[id] || '👤';
+    }
+
+    // 1초마다 화면상의 시간만 업데이트 (서버 통신 X)
+    function tick() {
+        timerData.forEach(member => {
+            if (member.IsRunning && member.StartTime) {
+                const el = document.getElementById(`time-${member.ProjectName}-${member.MemberID}`);
+                if (el) {
+                    let totalSec = Number(member.AccumulatedTime);
+                    const start = new Date(member.StartTime);
+                    const now = new Date();
+                    totalSec += Math.floor((now - start) / 1000);
+                    el.innerText = formatTime(totalSec);
+                }
+            }
+        });
+    }
+
+    // 초기 실행
+    fetchData();
+    setInterval(tick, 1000); // 화면 갱신용
+    setInterval(fetchData, 30000); // 30초마다 서버 데이터와 동기화
+</script>
+
+</body>
+</html>
