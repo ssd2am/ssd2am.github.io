@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>LG GMG Billing System 💰</title>
+    <style>
+        :root {
+            --blue: cadetblue;
+            --beige: rgb(238, 236, 230);
+            --grey: rgb(108, 108, 108);
+        }
+        body {
+            background-color: var(--beige);
+            font-family: sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center;
+        }
+        .app-container {
+            width: 100%; max-width: 600px;
+            background: white; border: 1px solid black;
+            padding: 30px; box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+        }
+        h1 { font-size: 18pt; color: var(--grey); text-align: center; margin-bottom: 30px; }
+        
+        /* 프로젝트 정보 입력 영역 */
+        .info-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .info-section input { padding: 8px; border: 1px solid #ccc; font-family: inherit; }
+
+        /* 멤버 선택 영역 */
+        .member-selector { display: flex; justify-content: space-around; margin-bottom: 30px; border-bottom: 1px dotted #ccc; padding-bottom: 20px; }
+        .member-card { text-align: center; cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 10px; border: 1px solid transparent; }
+        .member-card.active { opacity: 1; border: 1px solid var(--blue); background: #f9fdfd; }
+        .member-card .emoji { font-size: 20pt; display: block; }
+        .member-card .name { font-weight: bold; font-size: 9pt; display: block; margin-top: 5px; }
+
+        /* 멤버별 입력 영역 */
+        .billing-row { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; display: none; }
+        .billing-row.visible { display: block; }
+        .row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .row-header strong { color: var(--blue); }
+        
+        .input-group { display: flex; gap: 5px; margin-bottom: 10px; }
+        .input-group input { flex-grow: 1; padding: 8px; border: 1px solid #ddd; }
+        .input-group button { background: var(--blue); color: white; border: none; padding: 5px 15px; cursor: pointer; }
+
+        .time-tag-container { display: flex; flex-wrap: wrap; gap: 5px; }
+        .time-tag { background: #eee; padding: 2px 8px; font-size: 8pt; border-radius: 3px; display: flex; align-items: center; gap: 5px; }
+        .time-tag span { cursor: pointer; color: red; font-weight: bold; }
+
+        .row-total { text-align: right; font-size: 10pt; margin-top: 10px; color: #555; }
+
+        /* 요약 및 견적서 영역 */
+        .summary-section { margin-top: 40px; border-top: 2px solid black; padding-top: 20px; }
+        .total-amount { font-size: 14pt; font-weight: bold; text-align: right; margin-bottom: 20px; }
+        #invoice-preview { background: #f4f4f4; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 9pt; white-space: pre-wrap; margin-bottom: 15px; border: 1px dashed #ccc; }
+        .copy-btn { width: 100%; padding: 15px; background: black; color: white; border: none; cursor: pointer; font-size: 11pt; }
+        .copy-btn:hover { background: var(--grey); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h1>Poppy Billing System 💰</h1>
+
+    <div class="info-section">
+        <input type="text" id="projName" placeholder="프로젝트명 입력" oninput="updateInvoice()">
+        <input type="date" id="projDate" oninput="updateInvoice()">
+    </div>
+
+    <div class="member-selector">
+        <div class="member-card" id="card-RK" onclick="toggleMember('RK')">
+            <span class="emoji">🔴</span><span class="name">RK</span>
+        </div>
+        <div class="member-card" id="card-BR" onclick="toggleMember('BR')">
+            <span class="emoji">🟣</span><span class="name">BR</span>
+        </div>
+        <div class="member-card" id="card-SP" onclick="toggleMember('SP')">
+            <span class="emoji">🟢</span><span class="name">SP</span>
+        </div>
+        <div class="member-card" id="card-NL" onclick="toggleMember('NL')">
+            <span class="emoji">🟡</span><span class="name">NL</span>
+        </div>
+    </div>
+
+    <div id="billing-area">
+        </div>
+
+    <div class="summary-section">
+        <div class="total-amount">총 청구 금액: <span id="grand-total">0</span>원</div>
+        <div id="invoice-preview">견적서 미리보기...</div>
+        <button class="copy-btn" onclick="copyInvoice()">견적서 복사하기</button>
+    </div>
+</div>
+
+<script>
+    const members = {
+        'RK': { name: 'RK', title: 'Creative Director', rate: 400000, times: [] },
+        'BR': { name: 'BR', title: 'Copy Strategist', rate: 200000, times: [] },
+        'SP': { name: 'SP', title: 'Account Manager', rate: 100000, times: [] },
+        'NL': { name: 'NL', title: 'Account Executive', rate: 100000, times: [] }
+    };
+
+    // 오늘 날짜 기본 설정
+    document.getElementById('projDate').valueAsDate = new Date();
+
+    function init() {
+        const area = document.getElementById('billing-area');
+        for (let id in members) {
+            const row = document.createElement('div');
+            row.className = `billing-row` ;
+            row.id = `row-${id}`;
+            row.innerHTML = `
+                <div class="row-header">
+                    <strong>${id} (${members[id].title})</strong>
+                    <span>시급: ${members[id].rate.toLocaleString()}원</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="input-${id}" placeholder="hh:mm:ss 복붙 (여러 개 가능)" onkeypress="if(event.keyCode==13) addTime('${id}')">
+                    <button onclick="addTime('${id}')">추가</button>
+                </div>
+                <div class="time-tag-container" id="tags-${id}"></div>
+                <div class="row-total" id="total-${id}">총 투자 시간: 00:00:00 | 금액: 0원</div>
+            `;
+            area.appendChild(row);
+        }
+    }
+
+    function toggleMember(id) {
+        const card = document.getElementById(`card-${id}`);
+        const row = document.getElementById(`row-${id}`);
+        card.classList.toggle('active');
+        row.classList.toggle('visible');
+        updateInvoice();
+    }
+
+    function addTime(id) {
+        const input = document.getElementById(`input-${id}`);
+        const rawValue = input.value;
+        // 정규표현식으로 hh:mm:ss 패턴 모두 추출
+        const timePattern = /\d{1,2}:\d{2}:\d{2}/g;
+        const matches = rawValue.match(timePattern);
+
+        if (matches) {
+            members[id].times.push(...matches);
+            input.value = '';
+            renderTags(id);
+            updateInvoice();
+        }
+    }
+
+    function removeTime(id, index) {
+        members[id].times.splice(index, 1);
+        renderTags(id);
+        updateInvoice();
+    }
+
+    function renderTags(id) {
+        const container = document.getElementById(`tags-${id}`);
+        container.innerHTML = '';
+        members[id].times.forEach((t, i) => {
+            container.innerHTML += `<div class="time-tag">${t} <span onclick="removeTime('${id}', ${i})">×</span></div>`;
+        });
+    }
+
+    function timeToSeconds(t) {
+        const [h, m, s] = t.split(':').map(Number);
+        return h * 3600 + m * 60 + s;
+    }
+
+    function secondsToHHMMSS(totalSeconds) {
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateInvoice() {
+        let grandTotal = 0;
+        const projName = document.getElementById('projName').value || '(프로젝트명)';
+        const projDate = document.getElementById('projDate').value;
+        
+        // 날짜 형식 변환 (YYYY-MM-DD -> YY.MM.DD)
+        const dateParts = projDate.split('-');
+        const formattedDate = dateParts.length === 3 ? `${dateParts[0].slice(-2)}.${dateParts[1]}.${dateParts[2]}` : '';
+
+        let invoiceText = `${projName} [${formattedDate}]\n`;
+
+        for (let id in members) {
+            const row = document.getElementById(`row-${id}`);
+            if (row.classList.contains('visible')) {
+                let memberSeconds = 0;
+                members[id].times.forEach(t => memberSeconds += timeToSeconds(t));
+                
+                const h = Math.floor(memberSeconds / 3600);
+                const m = Math.floor((memberSeconds % 3600) / 60);
+                
+                // 금액 계산 및 콤마 처리
+                const memberAmount = Math.floor((memberSeconds / 3600) * members[id].rate);
+                const formattedAmount = memberAmount.toLocaleString();
+                const formattedRate = (members[id].rate / 10000); // 400000 -> 40만
+
+                // 나탈리님이 요청하신 양식: - 직함 (시급 x hrs min = 금액)
+                invoiceText += `- ${members[id].title} (${formattedRate}만 x ${h}hrs ${m}min = ${formattedAmount})\n`;
+                
+                grandTotal += memberAmount;
+                document.getElementById(`total-${id}`).innerText = `총 투자 시간: ${h}h ${m}m | 금액: ${formattedAmount}원`;
+            }
+        }
+
+        document.getElementById('grand-total').innerText = grandTotal.toLocaleString();
+        document.getElementById('invoice-preview').innerText = invoiceText;
+    }
+
+    function copyInvoice() {
+        const text = document.getElementById('invoice-preview').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('견적서가 복사되었습니다!');
+        });
+    }
+
+    init();
+</script>
+
+</body>
+</html>
